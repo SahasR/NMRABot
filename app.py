@@ -76,12 +76,12 @@ def get_search_result(query):
     pres_check(query, med_dir_table.text)
     # print(med_dir_table.text)
 
-    # for med in med_dir_table.find_all('a', href=True):
-    #     # print(med['href'])
-    #     scrape_url = 'https://nmra.gov.lk/' + med['href']
-    #     # print(scrape_url)
-    #     print('Finished creating the URL for the varied medicines......')
-    #     final_scrape(scrape_url)
+    for med in med_dir_table.find_all('a', href=True):
+        # print(med['href'])
+        scrape_url = 'https://nmra.gov.lk/' + med['href']
+        # print(scrape_url)
+        print('Finished creating the URL for the varied medicines......')
+        final_scrape(scrape_url)
 
 def begin_scrape():
     f = open("data.txt", "r")
