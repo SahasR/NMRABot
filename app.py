@@ -5,9 +5,35 @@ import xlsxwriter
 workbook = xlsxwriter.Workbook('MedicalBotTest.xlsx')
 worksheet = workbook.add_worksheet()
 
+checkworkbook = xlsxwriter.Workbook('PresenceCheck.xlsx')
+checkworksheet1 = checkworkbook.add_worksheet()
+checkworksheet2 = checkworkbook.add_worksheet()
+
+
+pres_row1 = 1
+pres_column = 0
+pres_row2 = 1
 
 row = 1
 column = 0
+
+def pres_check(query, feedback):
+    global pres_row1, pres_row2, pres_column
+    print("Validating Presence")
+    # print(query)
+    # print(feedback)
+
+    if feedback == "No results found!.":
+        checkworksheet1.write(pres_row1, pres_column, query)
+        checkworksheet1.write(pres_row1, 1, "NO")
+        pres_row1 += 1
+        print('Its not there')
+    else:
+        checkworksheet2.write(pres_row2, pres_column, query)
+        checkworksheet2.write(pres_row2, 1, "YES")
+        pres_row2 += 1
+        print('Its there')
+
 
 def final_scrape(final_url):
     global row, column
@@ -47,12 +73,15 @@ def get_search_result(query):
     soup = BeautifulSoup(r.text, 'html.parser')
     med_dir_table = soup.find('table', class_ ='mtable phrmaciesdir')
     # print(med_dir_table)
-    for med in med_dir_table.find_all('a', href=True):
-        # print(med['href'])
-        scrape_url = 'https://nmra.gov.lk/' + med['href']
-        # print(scrape_url)
-        print('Finished creating the URL for the varied medicines......')
-        final_scrape(scrape_url)
+    pres_check(query, med_dir_table.text)
+    # print(med_dir_table.text)
+
+    # for med in med_dir_table.find_all('a', href=True):
+    #     # print(med['href'])
+    #     scrape_url = 'https://nmra.gov.lk/' + med['href']
+    #     # print(scrape_url)
+    #     print('Finished creating the URL for the varied medicines......')
+    #     final_scrape(scrape_url)
 
 def begin_scrape():
     f = open("data.txt", "r")
@@ -62,6 +91,7 @@ def begin_scrape():
     f.close()
     print("All Data successfully transferred...")
     workbook.close()
+    checkworkbook.close()
 
 
 begin_scrape()
